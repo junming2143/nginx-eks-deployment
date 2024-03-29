@@ -33,13 +33,17 @@ pipeline {
 
         stage('Init') {
             steps {
-                sh 'terraform init'
+                dir('eks'){
+                    sh 'terraform init'
+                }
             }
         }
 
         stage('Apply Terraform') {
             steps {
-                sh 'terraform apply -auto-approve'
+                dir('eks'){
+                    sh 'terraform apply -auto-approve'
+                }
             }
         }
 
@@ -54,7 +58,7 @@ pipeline {
 
         stage('Deploy Nginx') {
             steps {
-                sh "kubectl --kubeconfig=${KUBECONFIG} apply -f nginx-deployment.yaml"
+                sh "kubectl --kubeconfig=${KUBECONFIG} apply -f nginx/nginx-deployment.yaml"
             }
         }
     }
